@@ -3,7 +3,7 @@ from email.message import EmailMessage
 from pathlib import Path
 from datetime import datetime, timedelta
 from functools import wraps
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, make_response
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import requests
@@ -302,15 +302,6 @@ def german_syllabus():
 
 @app.get('/api/status')
 def status(): return jsonify(ok=True,openai=bool(OPENAI_API_KEY),model=OPENAI_MODEL,web_search=WEB_SEARCH)
-
-@app.get('/sw.js')
-def service_worker():
-    response = make_response(send_from_directory(BASE / 'static', 'sw.js'))
-    response.headers['Service-Worker-Allowed'] = '/'
-    response.headers['Cache-Control'] = 'no-cache'
-    response.headers['Content-Type'] = 'application/javascript; charset=utf-8'
-    return response
-
 @app.get('/robots.txt')
 def robots(): return 'User-agent: *\nAllow: /\n'
 

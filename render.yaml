@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ngenoai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -c "import app; app.init_db()" && gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: NGENO_SECRET_KEY
+        generateValue: true
+      - key: NGENO_DEMO_MODE
+        value: "true"

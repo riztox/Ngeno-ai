@@ -50,36 +50,3 @@ async function loadUniversity(){const d=await api('/api/university');if(!d.ok)re
 $('#uniSave')?.addEventListener('click',async()=>{const d=await api('/api/university/profile','POST',{institution:$('#uniInstitution').value,student_number:$('#uniStudentNumber').value,programme:$('#uniProgramme').value,year_level:$('#uniYear').value,faculty:$('#uniFaculty').value,semester:$('#uniSemester').value,gpa:$('#uniGpaInput').value,credits:$('#uniCreditsInput').value,timetable:$('#uniTimetable').value});toast(d.ok?'University profile saved.':d.error)});
 $('#addCourse')?.addEventListener('click',async()=>{const d=await api('/api/university/course','POST',{code:$('#courseCode').value,name:$('#courseName').value,lecturer:$('#courseLecturer').value,credits:$('#courseCredits').value,mark:$('#courseMark').value});if(d.ok){['courseCode','courseName','courseLecturer','courseCredits','courseMark'].forEach(id=>$('#'+id).value='');loadUniversity();toast('Module added.')}else toast(d.error)});
 $('#addTask')?.addEventListener('click',async()=>{const d=await api('/api/university/task','POST',{course_code:$('#taskCourse').value,title:$('#taskTitle').value,due_date:$('#taskDue').value});if(d.ok){['taskCourse','taskTitle','taskDue'].forEach(id=>$('#'+id).value='');loadUniversity();toast('Deadline added.')}else toast(d.error)});
-
-
-// NgenoAI installable web app support. AI and account actions still require connectivity.
-let ngenoInstallPrompt = null;
-const installButton = document.getElementById('installApp');
-window.addEventListener('beforeinstallprompt', (event) => {
-  event.preventDefault();
-  ngenoInstallPrompt = event;
-  if (installButton) installButton.classList.remove('hidden');
-});
-if (installButton) {
-  installButton.addEventListener('click', async () => {
-    if (!ngenoInstallPrompt) {
-      toast('To install NgenoAI, use your browser menu and choose Install app or Add to Home Screen.');
-      return;
-    }
-    ngenoInstallPrompt.prompt();
-    await ngenoInstallPrompt.userChoice;
-    ngenoInstallPrompt = null;
-    installButton.classList.add('hidden');
-  });
-}
-window.addEventListener('appinstalled', () => {
-  if (installButton) installButton.classList.add('hidden');
-  toast('NgenoAI was added to your device.');
-});
-if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {
-      // The website remains usable if the browser or hosting environment blocks PWA support.
-    });
-  });
-}
